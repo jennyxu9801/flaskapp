@@ -43,3 +43,36 @@ class Post(db.Model):
     def __repr__(self):
         return f"Post('{self.title}','{self.date_posted}')"
 
+class Book(db.Model):
+    asin = db.Column(db.String(100), primary_key = True)
+    title = db.Column(db.String(100), nullable=False)
+    price = db.Column(db.Integer, nullable=False)
+    imUrl = db.Column(db.String(100), nullable=False)
+    brand = db.Column(db.String(100), nullable=False)
+    reviews = db.relationship('Review',backref='book',lazy=True)
+
+    def __repr__(self):
+        return f"Book('{self.title}','{self.asin}')"
+
+class Review(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    asin = db.Column(db.String(100), db.ForeignKey('book.asin'),nullable=False)
+    helpful = db.Column(db.String(10))
+    overall = db.Column(db.Integer,  default = 0)
+    reviewText = db.Column(db.Text, default = 'No text')
+    reviewTime = db.Column(db.DateTime,  nullable=False, default = datetime.datetime.utcnow() + datetime.timedelta(hours=8))
+    reviewerID = db.Column(db.String(100), db.ForeignKey('reviewer.id'),nullable=False)
+    summary = db.Column(db.String(100) )
+    unixReviewTime = db.Column(db.String(100), default = int(datetime.datetime.now().timestamp()) )
+
+    def __repr__(self):
+        return f"Review('{self.reviewerID}','{self.reviewText}')"
+
+class Reviewer(db.Model):
+    id = db.Column(db.String(100), primary_key = True)
+    name = db.Column(db.String(100), nullable=False)
+    reviews = db.relationship('Review',backref='reviewer',lazy=True)
+
+    def __repr__(self):
+        return f"Reviewer('{self.id}','{self.name}')"
+
