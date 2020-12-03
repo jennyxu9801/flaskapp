@@ -108,29 +108,8 @@ for index,review in data.iterrows():
         counter=0
 
 session.commit()
+print('Finish writing reviews to sqlite database')
 
-#%%
-session.rollback()
-
-newBook1 = Book(asin = '1B000JMKQ0',title ='book1',price=1,imUrl ='sdfa', brand='apple')
-newBook2 = Book(asin = '2B000JMNQ0',title ='book2',price=2,imUrl ='gfdsag', brand='tree')
-newBook3 = Book(asin = '3B000JMKQ0',title ='book3',price=3,imUrl ='gsawet', brand='lemon')
-newBook4 = Book(asin = '4B00JMKNQ0',title ='book4',price=4,imUrl ='jtyk', brand='grass')
-newBook5 = Book(asin = '5B000MKNQ0',title ='book5',price=5,imUrl ='hrtsj', brand='hopper')
-newBook6 = Book(asin = '6B000JMKNQ',title ='book6',price=6,imUrl ='ejyt', brand='jump')
-
-session.add(newBook1)
-session.add(newBook2)
-session.add(newBook3)
-session.add(newBook4)
-session.add(newBook5)
-session.add(newBook6)
-session.commit()
-#%%
-session.rollback()
-newBook1 = Book(asin = 'B000JMKX4W',title ='book7',price=7,imUrl ='sdfa', brand='apple')
-session.add(newBook1)
-session.commit()
 #%%
 import json
 import ast
@@ -186,6 +165,7 @@ for index,book in df.iterrows():
         counter=0
 
 session.commit()
+print('Finish writing metadata to sqlite database')
 
 
 

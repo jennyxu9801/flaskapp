@@ -4,21 +4,36 @@
 
 <article class="media content-section">
 
-	<div class="media-body">
-		<div class="article-metadata">
-			
-			<small class="text-muted">Asin: {{ book.asin }}</small>
-            
+	
+
+        <div class="media-body">
         
-        </div>
-        <div class="article-metadata">
-            <h2><p class="article-title">{{ book.title }}</p></h2>
-        <p class="article-title">Price: {{ book.price }}</p>
-        <p class="article-title">imUrl: {{ book.imUrl }}</p>
-        <p class="article-title">Brand: {{ book.brand }}</p>
-        </div>
-        <br>
-        <h3>Reviews</h3>
+            <div class="article-metadata">
+                
+                <small class="text-muted">Asin: {{ book.asin }}</small>
+                
+            
+            </div>
+        </br>
+            <div style="width: 200px; float: left; background-color: rgb(255, 255, 255);"> 
+                <img src="{{book.imUrl}}" alt="imUrl: {{ book.imUrl }}" class="img-thumbnail">
+            </div>
+            <div style="margin-left: 220px; background-color: rgb(255, 255, 255);"> 
+                
+                <a class="mr-2" style="font-size:20px" href="{{url_for('posts.book',asin=book.asin)}}">{{ book.title }}</a>
+            
+            <p class="article-title">Price: ${{ book.price }}</p>
+            <p class="article-title">Brand: {{ book.brand }}</p>
+            <p class="article-title">Brand: {{ book.description }}</p>
+            
+            
+            </div>
+    </div>
+</article>
+        
+        <article class="media content-section">
+            <div class="article-metadata">
+                <h3>Reviews</h3>
         {% for review in reviews.items %}
         <article class="media content-section">
             
@@ -39,7 +54,10 @@
 
         
 		
-	</div>
+    </div>
+            </div>
+        
+
 </article>
 {% endfor %}
 {%for page_num in reviews.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2)%}

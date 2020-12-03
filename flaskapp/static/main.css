@@ -78,3 +78,32 @@ body {
   .account-heading {
     font-size: 2.5rem;
   }
+
+  div.container {
+    display: grid;
+    grid-template-columns: 220px 20px auto;
+    grid-template-rows: auto;
+  }
+
+  div.left {
+    grid-column-start: 1;
+    grid-column-end: 2;
+    grid-row-start: row1-start;
+    grid-row-end: 3;
+    background-color: Aqua;
+  }
+
+  div.right {
+    grid-column-start: 3;
+    grid-column-end: 4;
+    grid-row-start: 1;
+    grid-row-end: 1;
+    background-color: Silver;
+  }
+
+  div.below {
+    grid-column-start: 1;
+    grid-column-end: 4;
+    grid-row-start: 2;
+    grid-row-end: 2;
+  }
