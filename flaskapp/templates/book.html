@@ -4,77 +4,81 @@
 
 <article class="media content-section">
 
-	
 
-        <div class="media-body">
-        
-            <div class="article-metadata">
-                
-                <small class="text-muted">Asin: {{ book.asin }}</small>
-                
-            
-            </div>
+
+    <div class="media-body">
+
+        <div class="article-metadata">
+
+            <small class="text-muted">Asin: {{ book.asin }}</small>
+
+
+        </div>
         </br>
-            <div style="width: 200px; float: left; background-color: rgb(255, 255, 255);"> 
-                <img src="{{book.imUrl}}" alt="imUrl: {{ book.imUrl }}" class="img-thumbnail">
-            </div>
-            <div style="margin-left: 220px; background-color: rgb(255, 255, 255);"> 
-                
-                <a class="mr-2" style="font-size:20px" href="{{url_for('posts.book',asin=book.asin)}}">{{ book.title }}</a>
-            
+        <div style="width: 200px; float: left; background-color: rgb(255, 255, 255);">
+            <img src="{{book.imUrl}}" alt="imUrl: {{ book.imUrl }}" class="img-thumbnail">
+        </div>
+        <div style="margin-left: 220px; background-color: rgb(255, 255, 255);">
+
+            <a class="mr-2" style="font-size:20px" href="{{url_for('posts.book',asin=book.asin)}}">{{ book.title }}</a>
+
             <p class="article-title">Price: ${{ book.price }}</p>
             <p class="article-title">Brand: {{ book.brand }}</p>
             <p class="article-title">Brand: {{ book.description }}</p>
-            
-            
-            </div>
+
+
+        </div>
     </div>
 </article>
-        
-        <article class="media content-section">
-            <div class="article-metadata">
-                <h3>Reviews</h3>
+
+<article class="media content-section">
+    <div class="article-metadata">
+        <h3>Reviews</h3>
         {% for review in reviews.items %}
         <article class="media content-section">
-            
-	    <div class="media-body">
 
-		<div class="article-metadata">
-			<a class="mr-2" >{{ review.reviewer.name }}</a>
-			<small class="text-muted">{{ review.reviewTime }}</small>
-        </div>
-        <div class="article-metadata">
-            
-            <h5><a class="article-title" >{{ review.summary }}</a></h5>
-            <small class="text-muted">Overall rating: {{ review.overall }}</small>
-            <p class="article-content">{{ review.reviewText }}</p>
-        
+            <div class="media-body">
 
-        </div>
+                <div class="article-metadata">
+                    <a class="mr-2">{{ review.reviewer.name }}</a>
+                    <small class="text-muted">{{ review.reviewTime }}</small>
+                </div>
+                <div class="article-metadata">
 
-        
-		
-    </div>
+                    <h5><a class="article-title">{{ review.summary }}</a></h5>
+                    <small class="text-muted">Overall rating: {{ review.overall }}</small>
+                    <p class="article-content">{{ review.reviewText }}</p>
+
+
+                </div>
+
+
+
             </div>
-        
+        </article>
 
-</article>
-{% endfor %}
+        {% endfor %}
+    
+
+
+
+    
+
 {%for page_num in reviews.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2)%}
 {%if page_num%}
 {%if reviews.page==page_num%}
-<a class="btn btn-info mb-4" href="{{url_for('main.review',page=page_num)}}">{{page_num}}</a>
+<a class="btn btn-info mb-4" href="{{url_for('posts.book',asin=book.asin,page=page_num)}}">{{page_num}}</a>
 {%else%}
-<a class="btn btn-outline-info mb-4" href="{{url_for('main.review',page=page_num)}}">{{page_num}}</a>
+<a class="btn btn-outline-info mb-4" href="{{url_for('posts.book',asin=book.asin,page=page_num)}}">{{page_num}}</a>
 {%endif%}
 {%else%}
 ...
 {%endif%}
 {% endfor %}
-    
-        
 
-	</div>
+</div>
+
+
 </article>
 
 

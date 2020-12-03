@@ -3,7 +3,7 @@ from flask import (render_template, url_for, flash,
 from flask_login import current_user, login_required
 from flaskapp import db
 from flaskapp.models import Post, Book, Review
-from flaskapp.posts.forms import PostForm
+from flaskapp.posts.forms import PostForm,NewReviewForm,NewBookForm
 
 posts = Blueprint('posts',__name__)
 
@@ -72,36 +72,49 @@ def book(asin):
     return render_template('book.html', title='book.title', book=book, reviews= reviews)
 
 
-'''
+
 @posts.route("/review/new", methods=['GET', 'POST'])
 @login_required
 def new_review():
-    form = ReviewForm()
-    book = Book.query.filter_by(title=form.title.data).first_or_404()
-    reviewer = reviewer.query.filter_by()
-    if form.validate_on_submit():
-        review = Review(asin=book.asin,
-                    overall=form.rating.data, reviewerID=current_user)
-        db.session.add(post)
-        db.session.commit()
+    form = NewReviewForm()
 
-        flash('Your post has been created!', 'success')
-        return redirect(url_for('main.home'))
-    return render_template('create_post.html', title='New Post',
-                           form=form, legend="New Post")
+    try:
+        book = Book.query.filter_by(title=form.bookTitle.data).first()
+        if form.validate_on_submit():
+            review = Review(asin=book.asin,overall=form.rating.data, reviewerID=current_user.id,reviewText = form.review.data,summary=form.summary.data)
+            db.session.add(review)
+            db.session.commit()
+
+            flash('Your review has been created!', 'success')
+            return redirect(url_for('main.home'))
+        return render_template('new_review.html', title='New Review',
+                            form=form)
+    except AttributeError:
+        flash('The book does not exist, please add new book first!', 'warning')
+        return render_template('new_review.html', title='New Review',
+                            form=form)
+
+@posts.route("/book/new", methods=['GET', 'POST'])
+@login_required
+def new_book():
+    form = NewBookForm()
+    try:
+        if form.validate_on_submit():
+            book = Book(asin=form.asin.data,title=form.title.data, price=form.price.data,brand = form.brand.data,description=form.description.data)
+            db.session.add(book)
+            db.session.commit()
+            flash('New book has been added!', 'success')
+            return redirect(url_for('main.home'))
+        return render_template('new_book.html', title='New Book',
+                            form=form)
+    except AttributeError:
+        flash('The book does not exist, please add new book first!', 'warning')
+        return render_template('new_book.html', title='New Book',
+                            form=form)
 
 
-id = db.Column(db.Integer, primary_key = True)
-    asin = db.Column(db.String(100), db.ForeignKey('book.asin'),nullable=False)
-    helpful = db.Column(db.String(10))
-    overall = db.Column(db.Integer,  default = 0)
-    reviewText = db.Column(db.Text, default = 'No text')
-    reviewTime = db.Column(db.DateTime,  nullable=False, default = datetime.datetime.utcnow() + datetime.timedelta(hours=8))
-    reviewerID = db.Column(db.String(100), db.ForeignKey('reviewer.id'),nullable=False)
-    summary = db.Column(db.String(100) )
-    unixReviewTime = db.Column(db.String(100), default = int(datetime.datetime.now().timestamp()) )
 
-'''
+
 
 
 

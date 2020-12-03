@@ -1,12 +1,19 @@
 {%extends "layout.html"%}
 
 {%block content%}
-
+<legend class="border-bottom mb-4">
+    {% if order==1%}
+    Order by rating(desc)
+{%else%}
+Order by rating(asc)
+{%endif%}
+<a style="position: relative;left: 30px;font-size: 70%;" href="{{ url_for('main.book') }}">Back</a>
+</legend>
 {% for book in books.items %}
 <article class="media content-section">
-
-	<div class="media-body">
     
+	<div class="media-body">
+        
 		<div class="article-metadata">
 			
 			<small class="text-muted">Asin: {{ book.asin }}</small>
@@ -34,9 +41,17 @@
 {%for page_num in books.iter_pages(left_edge=2, right_edge=2, left_current=1, right_current=3)%}
 {%if page_num%}
 {%if books.page==page_num%}
-<a class="btn btn-info mb-4" href="{{url_for('main.book',page=page_num)}}">{{page_num}}</a>
+{% if order==1%}
+<a class="btn btn-info mb-4" href="{{url_for('main.order_by_rating_desc',page=page_num)}}">{{page_num}}</a>
 {%else%}
-<a class="btn btn-outline-info mb-4" href="{{url_for('main.book',page=page_num)}}">{{page_num}}</a>
+<a class="btn btn-info mb-4" href="{{url_for('main.order_by_rating_asc',page=page_num)}}">{{page_num}}</a>
+{%endif%}
+{%else%}
+{% if order==1%}
+<a class="btn btn-outline-info mb-4" href="{{url_for('main.order_by_rating_desc',page=page_num)}}">{{page_num}}</a>
+{%else%}
+<a class="btn btn-outline-info mb-4" href="{{url_for('main.order_by_rating_asc',page=page_num)}}">{{page_num}}</a>
+{%endif%}
 {%endif%}
 {%else%}
 ...

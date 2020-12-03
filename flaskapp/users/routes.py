@@ -1,7 +1,7 @@
 from flask import render_template, url_for, flash, redirect, request, Blueprint
 from flask_login import login_user, current_user, logout_user, login_required
 from flaskapp import db, bcrypt
-from flaskapp.models import User, Post
+from flaskapp.models import User, Post, Reviewer
 from flaskapp.users.forms import (RegistrationForm, LoginForm, UpdateAccountForm,
                                    RequestResetForm, ResetPasswordForm)
 from flaskapp.users.utils import save_picture, send_reset_email
@@ -20,6 +20,12 @@ def register():
                     email=form.email.data, password=hashed_pw)
         db.session.add(user)
         db.session.commit()
+
+        idofuser = User.query.filter_by(username=form.username.data).first()
+        reviewer = Reviewer(id= idofuser.id, name = form.username.data)
+        db.session.add(user)
+        db.session.commit()
+        
 
         flash(f'Your account has been created! You can now log in!', 'success')
         return redirect(url_for('users.login'))

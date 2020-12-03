@@ -4,8 +4,8 @@ from flaskapp.posts.forms import SearchForm, OrderByForm
 from flask import (render_template, url_for, flash,
                    redirect)
 from flaskapp import db
-from sqlalchemy.sql import func,desc
-import sys
+from sqlalchemy.sql import func,desc,asc
+
 
 main = Blueprint('main',__name__)
 
@@ -46,43 +46,45 @@ def search_result(search):
 def review():
     page = request.args.get('page', 1, type=int)
     reviews = Review.query.order_by(
-        Review.reviewTime.desc()).paginate(page=page, per_page=15)
+        Review.reviewTime.desc()).paginate(page=page, per_page=5)
 
     return render_template('review.html', reviews=reviews)
 
 @main.route("/books",methods=['GET', 'POST'])
 def book():
     form = OrderByForm()
-    print(form.orderby.data,flush=True)
-    if form.is_submitted():
-        print("first if",flush=True)
-        if form.orderby.data =='1': #[(1, 'Rating'), (2, 'Title')]) 
-            print("second if",flush=True)
-            flash('Your have selected rating!', 'success')
-            page = request.args.get('page', 1, type=int)
-
-            '''books = Book.query.with_entities(func.avg(Book.query.join(Review).overall.label('avg_rating'))).order_by(
-                Book.avg_rating.desc()).paginate(page=page, per_page=5)
-            books = Review.query.group_by(Review.asin)'''
-
-            #book = db.session.query( Review.asin, func.avg(Review.overall).label('avg_rating') ).group_by(Review.asin).order_by(desc('avg_rating')).first()
-            books = db.session.query( Review.asin,Book.query.filter_by(asin=Review.asin).first().title,func.avg(Review.overall).label('avg_rating')).group_by(Review.asin).order_by(desc('avg_rating')).paginate(page=page, per_page=5)
-            #order_by(desc('avg_rating')).paginate(page=page, per_page=5)
-            #print(book,flush=True)
-            
-        '''else:
-            page = request.args.get('page', 1, type=int)     
-            books = Book.query.order_by(
-                Book.title.desc()).paginate(page=page, per_page=5)'''
-        
     
-        return render_template('orderby_result.html', books=books )
+    if form.is_submitted():
+        
+        if form.orderby.data =='1': #[(1, 'Rating (desc)'), (2, 'Rating (asc)')]) 
+            return redirect(url_for('main.order_by_rating_desc'))
+        elif form.orderby.data =='2': 
+            return redirect(url_for('main.order_by_rating_asc'))
 
     page = request.args.get('page', 1, type=int)
     books = Book.query.order_by(
                 Book.title.desc()).paginate(page=page, per_page=5)
     print("before if",flush=True)
     return render_template('books.html', form=form, books=books )
+
+
+@main.route("/orderby/rating_desc")
+def order_by_rating_desc():
+    page = request.args.get('page', 1, type=int)
+
+    #book = db.session.query( Review.asin, func.avg(Review.overall).label('avg_rating') ).group_by(Review.asin).order_by(desc('avg_rating')).first()
+    asin_and_avg = db.session.query( Review.asin,func.avg(Review.overall).label('avg_rating')).group_by(Review.asin).subquery()
+    books = db.session.query(Book.title,Book.asin,Book.brand,Book.imUrl,Book.price, asin_and_avg.c.avg_rating).outerjoin(Book,asin_and_avg.c.asin == Book.asin).order_by(desc('avg_rating')).paginate(page=page, per_page=5)
+
+    return render_template('orderby_rating.html',books=books,order = 1)
+
+@main.route("/orderby/rating_asc")
+def order_by_rating_asc():
+    page = request.args.get('page', 1, type=int)
+    asin_and_avg = db.session.query( Review.asin,func.avg(Review.overall).label('avg_rating')).group_by(Review.asin).subquery()
+    books = db.session.query(Book.title,Book.asin,Book.brand,Book.imUrl,Book.price, asin_and_avg.c.avg_rating).outerjoin(Book,asin_and_avg.c.asin == Book.asin).order_by(asc('avg_rating')).paginate(page=page, per_page=5)
+
+    return render_template('orderby_rating.html',books=books,order= 2)
     
  
     

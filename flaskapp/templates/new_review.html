@@ -1,0 +1,86 @@
+{%extends "layout.html"%}
+
+{%block content%}
+<form method="POST" action="">
+    {{form.hidden_tag()}}
+    <fieldset class="form-group">
+        <legend class="border-bottom mb-4">New Review</legend>
+        <div class="form-group">
+            {{form.bookTitle.label(class="form-control-label")}}
+                
+            {% if form.bookTitle.errors%}
+                {{form.bookTitle(class="form-control form-control-lg is-invalid")}}
+                <div class="invalid-feedback">
+                    {%for error in form.title.errors%}
+                    <span>
+                        {{error}}
+                    </span>
+                    {%endfor%}
+                </div>
+
+            {%else%}
+                {{form.bookTitle(class="form-control form-control-lg")}}
+
+            {%endif%}
+            
+        </div>
+        <div class="form-group">
+            {{form.rating.label(class="form-control-label")}}
+            {% if form.rating.errors%}
+                {{form.rating(class="form-control form-control-lg is-invalid")}}
+                <div class="invalid-feedback">
+                    {%for error in form.rating.errors%}
+                    <span>
+                        {{error}}
+                    </span>
+                    {%endfor%}
+                </div>
+
+            {%else%}
+                {{form.rating(class="form-control form-control-lg")}}
+
+            {%endif%}
+        </div>
+        <div class="form-group">
+            {{form.summary.label(class="form-control-label")}}
+            {% if form.summary.errors%}
+                {{form.summary(class="form-control form-control-lg is-invalid")}}
+                <div class="invalid-feedback">
+                    {%for error in form.summary.errors%}
+                    <span>
+                        {{error}}
+                    </span>
+                    {%endfor%}
+                </div>
+
+            {%else%}
+                {{form.summary(class="form-control form-control-lg")}}
+
+            {%endif%}
+        </div>
+        <div class="form-group">
+            {{form.review.label(class="form-control-label")}}
+            {% if form.review.errors%}
+                {{form.review(class="form-control form-control-lg is-invalid")}}
+                <div class="invalid-feedback">
+                    {%for error in form.review.errors%}
+                    <span>
+                        {{error}}
+                    </span>
+                    {%endfor%}
+                </div>
+
+            {%else%}
+                {{form.review(class="form-control form-control-lg")}}
+
+            {%endif%}
+        </div>
+        
+    </fieldset>
+    <div class="form-group">
+        {{form.submit(class="btn btn-outline-info")}}
+       
+    </div>
+</form>
+
+{%endblock content%}

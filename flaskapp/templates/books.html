@@ -2,93 +2,99 @@
 
 {%block content%}
 
-    <form method="POST" action="">
-       
-        <fieldset class="form-group">
-            
-            <div class="form-group">
-                <p >Order by: 
+<form method="POST" action="">
+
+    <fieldset class="form-group">
+
+        <div class="form-group">
+            <p>Order by:
                 {% if form.orderby.errors%}
-                        {{form.orderby(class="form-control form-control-lg is-invalid")}}
-                        <div class="invalid-feedback">
-                            {%for error in form.orderby.errors%}
-                            <span>
-                                {{error}}
-                            </span>
-                            {%endfor%}
-                        </div>
-            
-                    {%else%}
-                        {{form.orderby(class="button")}}
-            
-                    {%endif%}
-                
-            
-                 Gernes:  
-                {% if form.gernes.errors%}
-                        {{form.gernes(class="form-control form-control-lg is-invalid")}}
-                        <div class="invalid-feedback">
-                            {%for error in form.gernes.errors%}
-                            <span>
-                                {{error}}
-                            </span>
-                            {%endfor%}
-                        </div>
-            
-                    {%else%}
-                        {{form.gernes(class="button")}}
-            
-                    {%endif%}
-                
-                {% if form.search.errors%}
-                        {{form.search(class="form-control form-control-lg is-invalid")}}
-                        <div class="invalid-feedback">
-                            {%for error in form.search.errors%}
-                            <span>
-                                {{error}}
-                            </span>
-                            {%endfor%}
-                        </div>
-            
-                    {%else%}
-                        {{form.search(class="button")}}
-            
-                    {%endif%}
-                
+                {{form.orderby(class="form-control form-control-lg is-invalid")}}
+            <div class="invalid-feedback">
+                {%for error in form.orderby.errors%}
+                <span>
+                    {{error}}
+                </span>
+                {%endfor%}
             </div>
-            
-        </fieldset>
-        
-    </form>
+
+            {%else%}
+            {{form.orderby(class="button")}}
+
+            {%endif%}
+
+
+            Gernes:
+            {% if form.gernes.errors%}
+            {{form.gernes(class="form-control form-control-lg is-invalid")}}
+            <div class="invalid-feedback">
+                {%for error in form.gernes.errors%}
+                <span>
+                    {{error}}
+                </span>
+                {%endfor%}
+            </div>
+
+            {%else%}
+            {{form.gernes(class="button")}}
+
+            {%endif%}
+
+            {% if form.search.errors%}
+            {{form.search(class="form-control form-control-lg is-invalid")}}
+            <div class="invalid-feedback">
+                {%for error in form.search.errors%}
+                <span>
+                    {{error}}
+                </span>
+                {%endfor%}
+            </div>
+
+            {%else%}
+            {{form.search(style="position: relative;left: 30px;font-size: 70%;" ,class="btn btn-outline-info")}}
+
+            {%endif%}
+
+        </div>
+
+    </fieldset>
+
+</form>
 
 
 
 {% for book in books.items %}
 <article class="media content-section">
 
-	<div class="media-body">
-    
-		<div class="article-metadata">
-			
-			<small class="text-muted">Asin: {{ book.asin }}</small>
-            
-        
+    <div class="media-body">
+
+        <div class="article-metadata">
+
+            <small class="text-muted">Asin: {{ book.asin }}</small>
+
+
         </div>
-    </br>
-        <div style="width: 200px; float: left; background-color: rgb(255, 255, 255);"> 
+        </br>
+        <div style="width: 200px; float: left; background-color: rgb(255, 255, 255);">
             <img src="{{book.imUrl}}" alt="imUrl: {{ book.imUrl }}" class="img-thumbnail">
         </div>
-        <div style="margin-left: 220px; background-color: rgb(255, 255, 255);"> 
-            
+        <div style="margin-left: 220px; background-color: rgb(255, 255, 255);">
+
             <a class="mr-2" style="font-size:20px" href="{{url_for('posts.book',asin=book.asin)}}">{{ book.title }}</a>
-        
-        <p class="article-title">Price: {{ book.price }}</p>
-        <p class="article-title">Brand: {{ book.brand }}</p>
-        
-        
+
+
+            <p>
+                <span style="font-weight:bold;color:rgb(0, 0, 0);">Price:</span>
+                <span style="color:rgb(0, 0, 0);">{{ book.price }}</span></p>
+            <p>
+                <span style="font-weight:bold;color:rgb(0, 0, 0);">Brand:</span>
+                <span style="color:rgb(0, 0, 0);">{{ book.brand }}</span></p>
+            
+
+
         </div>
-</div>
-    </article>      
+    </div>
+</article>
 {% endfor %}
 
 {%for page_num in books.iter_pages(left_edge=2, right_edge=2, left_current=1, right_current=3)%}
