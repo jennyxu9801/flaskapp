@@ -4,6 +4,7 @@ from flask_login import current_user, login_required
 from flaskapp import db
 from flaskapp.models import Post, Book, Review
 from flaskapp.posts.forms import PostForm,NewReviewForm,NewBookForm
+from flaskapp.users.utils import save_picture
 
 posts = Blueprint('posts',__name__)
 
@@ -69,6 +70,7 @@ def book(asin):
         Review.reviewTime.desc()).paginate(page=page, per_page=5)
 
     book = Book.query.get_or_404(asin)
+    
     return render_template('book.html', title='book.title', book=book, reviews= reviews)
 
 
@@ -100,6 +102,11 @@ def new_book():
     form = NewBookForm()
     try:
         if form.validate_on_submit():
+            if form.picture.data:
+                picture_file = save_picture(form.picture.data)
+                filename='def_book_cover/'+picture_file
+                
+                book = Book(asin=form.asin.data,title=form.title.data, price=form.price.data,brand = form.brand.data,description=form.description.data,imUrl=filename)
             book = Book(asin=form.asin.data,title=form.title.data, price=form.price.data,brand = form.brand.data,description=form.description.data)
             db.session.add(book)
             db.session.commit()

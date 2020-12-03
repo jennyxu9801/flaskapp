@@ -23,7 +23,7 @@ def register():
 
         idofuser = User.query.filter_by(username=form.username.data).first()
         reviewer = Reviewer(id= idofuser.id, name = form.username.data)
-        db.session.add(user)
+        db.session.add(reviewer)
         db.session.commit()
         
 

@@ -42,6 +42,17 @@
             {%endif%}
         </div>
         <div class="form-group">
+            {{form.picture.label()}}
+            {{form.picture(class="form-control-file")}}
+            {%if form.picture.errors%}
+            {%for error in form.email.errors%}
+            <span class="text-danger">
+                {{error}}
+            </span></br>
+            {%endfor%}
+            {%endif%}
+        </div>
+        <div class="form-group">
             {{form.price.label(class="form-control-label")}}
             {% if form.price.errors%}
                 {{form.price(class="form-control form-control-lg is-invalid")}}

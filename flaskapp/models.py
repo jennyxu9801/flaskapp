@@ -2,7 +2,7 @@ from flaskapp import db,login_manager
 import datetime
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from flask_login import UserMixin
-from flask import current_app
+from flask import current_app,url_for
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -47,7 +47,7 @@ class Book(db.Model):
     asin = db.Column(db.String(100), primary_key = True)
     title = db.Column(db.String(100), nullable=False)
     price = db.Column(db.Integer, nullable=False)
-    imUrl = db.Column(db.String(100), nullable=False)
+    imUrl = db.Column(db.String(100), nullable=False, default ='def_book_cover/defbookcover.jpg')
     brand = db.Column(db.String(100), nullable=False)
     reviews = db.relationship('Review',backref='book',lazy=True)
     description = db.Column(db.Text, default = 'No text')

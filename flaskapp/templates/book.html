@@ -16,7 +16,7 @@
         </div>
         </br>
         <div style="width: 200px; float: left; background-color: rgb(255, 255, 255);">
-            <img src="{{book.imUrl}}" alt="imUrl: {{ book.imUrl }}" class="img-thumbnail">
+            <img src="{{url_for('static',filename=book.imUrl)}}" alt="imUrl: {{ book.imUrl }}" class="img-thumbnail">
         </div>
         <div style="margin-left: 220px; background-color: rgb(255, 255, 255);">
 
@@ -24,7 +24,7 @@
 
             <p class="article-title">Price: ${{ book.price }}</p>
             <p class="article-title">Brand: {{ book.brand }}</p>
-            <p class="article-title">Brand: {{ book.description }}</p>
+            <p class="article-title">Description: {{ book.description }}</p>
 
 
         </div>

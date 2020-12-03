@@ -1,7 +1,8 @@
 
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, TextAreaField, SelectField, IntegerField
+from wtforms import StringField, SubmitField, TextAreaField, SelectField, IntegerField, FloatField
 from wtforms.validators import DataRequired
+from flask_wtf.file import FileField, FileAllowed
 
 class PostForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired()])
@@ -28,7 +29,8 @@ class NewReviewForm(FlaskForm):
 class NewBookForm(FlaskForm):
     title = StringField('Book Title', validators=[DataRequired()])
     asin = StringField('asin', validators=[DataRequired()])
-    price = IntegerField('Price', validators=[DataRequired()])
+    picture =FileField('Upload Book Cover Picture', validators=[FileAllowed(['jpg','png'])])
+    price = FloatField('Price', validators=[DataRequired()])
     brand = StringField('Brand')
     description = TextAreaField('Description', validators=[DataRequired()])
     submit =   SubmitField('Add Book')
