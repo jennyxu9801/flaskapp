@@ -4,38 +4,38 @@
 <legend class="border-bottom mb-4">
     {% if order==1%}
     Order by rating(desc)
-{%else%}
-Order by rating(asc)
-{%endif%}
-<a style="position: relative;left: 30px;font-size: 70%;" href="{{ url_for('main.book') }}">Back</a>
+    {%else%}
+    Order by rating(asc)
+    {%endif%}
+    <a style="position: relative;left: 30px;font-size: 70%;" href="{{ url_for('main.book') }}">Back</a>
 </legend>
 {% for book in books.items %}
 <article class="media content-section">
-    
-	<div class="media-body">
-        
-		<div class="article-metadata">
-			
-			<small class="text-muted">Asin: {{ book.asin }}</small>
-            
-        
+
+    <div class="media-body">
+
+        <div class="article-metadata">
+
+            <small class="text-muted">Asin: {{ book.asin }}</small>
+
+
         </div>
-    </br>
-        <div style="width: 200px; float: left; background-color: rgb(255, 255, 255);"> 
+        </br>
+        <div style="width: 200px; float: left; background-color: rgb(255, 255, 255);">
             <img src="{{book.imUrl}}" alt="imUrl: {{ book.imUrl }}" class="img-thumbnail">
         </div>
-        <div style="margin-left: 220px; background-color: rgb(255, 255, 255);"> 
-            
-            <a class="mr-2" style="font-size:20px" href="{{url_for('posts.book',asin=book.asin)}}">{{ book.title }}</a>
-        
-        <p class="article-title">Price: {{ book.price }}</p>
-        <p class="article-title">Brand: {{ book.brand }}</p>
-        <p class="article-title">Rating: {{ book.avg_rating }}</p>
-        
-        
+        <div style="margin-left: 220px; background-color: rgb(255, 255, 255);">
+
+            <a class="mr-2" style="font-size:20px" href="{{url_for('posts.book',asin= book.asin )}}">{{ book.title }}</a>
+
+            <p class="article-title">Price: {{ book.price }}</p>
+            <p class="article-title">Brand: {{ book.brand }}</p>
+            <p class="article-title">Rating: {{ book.avg_rating }}</p>
+
+
         </div>
-</div>
-    </article>      
+    </div>
+</article>
 {% endfor %}
 
 {%for page_num in books.iter_pages(left_edge=2, right_edge=2, left_current=1, right_current=3)%}
@@ -58,4 +58,3 @@ Order by rating(asc)
 {%endif%}
 {% endfor %}
 {%endblock content%}
-

@@ -5,7 +5,7 @@ from flaskapp import db
 from flaskapp.models import Post, Book, Review
 from flaskapp.posts.forms import PostForm,NewReviewForm,NewBookForm
 from flaskapp.users.utils import save_picture
-
+from sqlalchemy.exc import IntegrityError
 posts = Blueprint('posts',__name__)
 
 
@@ -20,7 +20,7 @@ def new_post():
         db.session.commit()
 
         flash('Your post has been created!', 'success')
-        return redirect(url_for('main.home'))
+        return redirect(url_for('main.book'))
     return render_template('create_post.html', title='New Post',
                            form=form, legend="New Post")
 
@@ -61,7 +61,7 @@ def delete_post(post_id):
     db.session.delete(post)
     db.session.commit()
     flash('Your post has been deleted!', 'success')
-    return redirect(url_for('main.home'))
+    return redirect(url_for('main.book'))
 
 @posts.route("/book/<string:asin>")
 def book(asin):
@@ -88,7 +88,7 @@ def new_review():
             db.session.commit()
 
             flash('Your review has been created!', 'success')
-            return redirect(url_for('main.home'))
+            return redirect(url_for('main.book'))
         return render_template('new_review.html', title='New Review',
                             form=form)
     except AttributeError:
@@ -111,16 +111,18 @@ def new_book():
             db.session.add(book)
             db.session.commit()
             flash('New book has been added!', 'success')
-            return redirect(url_for('main.home'))
+            return redirect(url_for('main.book'))
         return render_template('new_book.html', title='New Book',
                             form=form)
     except AttributeError:
-        flash('The book does not exist, please add new book first!', 'warning')
+        flash('This book cannot be added to our database.', 'warning')
+        return render_template('new_book.html', title='New Book',
+                            form=form)
+    except:
         return render_template('new_book.html', title='New Book',
                             form=form)
 
-
-
+    
 
 
 

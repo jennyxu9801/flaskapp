@@ -4,15 +4,19 @@
 <h3 class="article-title">Posts by {{user.username}} ({{posts.total}})</h3>
 {% for post in posts.items %}
 <article class="media content-section">
-	<img class="rounded-circle article-img" src="{{url_for('static',filename='profile_pics/'+post.author.image_file)}}">
+	<img class="rounded-circle article-img" src="{{url_for('static',filename='profile_pics/'+user.image_file)}}">
 
 	<div class="media-body">
 		<div class="article-metadata">
-			<a class="mr-2" href="{{url_for('users.user_posts',username=post.author.username)}}">{{ post.author.username }}</a>
-			<small class="text-muted">{{ post.date_posted.strftime('%Y-%m-%d %H:%M') }}</small>
+			<a class="mr-2" href="{{url_for('users.user_posts',username=user.username)}}">{{ user.username }}</a>
+			<small class="text-muted">{{ post.reviewTime.strftime('%Y-%m-%d %H:%M') }}</small>
 		</div>
-		<h4><a class="article-title" href="{{url_for('posts.post',post_id=post.id)}}">{{ post.title }}</a></h4>
-		<p class="article-content">{{ post.content }}</p>
+		<div style="width: 100px; float: left; background-color: rgb(255, 255, 255);">
+            <a class="article-title" href="{{url_for('posts.book',asin=post.book.asin)}}"><img src="{{url_for('static',filename=post.book.imUrl)}}" alt="imUrl: {{ post.book.imUrl }}" class="img-thumbnail"></a>
+        </div>
+		<h4><a class="article-title" href="{{url_for('posts.book',asin=post.book.asin)}}">{{ post.book.title }}</h4>
+		<h5>{{ post.summary }}</h5>
+		<p class="article-content">{{ post.reviewText }}</p>
 	</div>
 </article>
 {% endfor %}
