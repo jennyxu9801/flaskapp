@@ -51,6 +51,7 @@ class Book(db.Model):
     brand = db.Column(db.String(100), nullable=False)
     reviews = db.relationship('Review',backref='book',lazy=True)
     description = db.Column(db.Text, default = 'No text')
+    genre = db.Column(db.String(100))
     def __repr__(self):
         return f"Book('{self.title}','{self.asin}')"
 

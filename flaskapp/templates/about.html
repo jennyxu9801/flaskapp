@@ -1,65 +1,76 @@
 {%extends "layout.html"%}
 
 {%block content%}
-<article class="media content-section"><div class="article-metadata"><h2 class="article-title">50.043 Database and Big Data Systems</h2></div></article>
 <article class="media content-section">
-	
+	<div class="article-metadata">
+		<h2 class="article-title">50.043 Database and Big Data Systems</h2>
+	</div>
+</article>
+<article class="media content-section">
+
 	<div class="media-body">
-		<div class="article-metadata"><h4 class="article-title">Our group members</h4></div>
-		
+		<div class="article-metadata">
+			<h4 class="article-title">Our group members</h4>
+		</div>
+
 		<p class="article-content">Dongke 1003713</p>
-			<p class="article-content">Huang Yizhe 1003697</p>
-			<p class="article-content">Luo Yifan 1002975</p>
-			<p class="article-content">Nguyen Minh Dang 1003615</p>
-			<p class="article-content">Xu Jiayue 1003628</p>
+		<p class="article-content">Huang Yizhe 1003697</p>
+		<p class="article-content">Luo Yifan 1002975</p>
+		<p class="article-content">Nguyen Minh Dang 1003615</p>
+		<p class="article-content">Xu Jiayue 1003628</p>
 	</div>
 </article>
 
 <article class="media content-section">
-	
+
 	<div class="media-body">
-		
-		
-		<div class="article-metadata"><h4 class="article-title">Production System</h4>
-			<p class="article-content">This system has the following features.</p></div>
-			<ul>
-				<li>A front-end with at least the following functionalities:
-					<ul >
-						
-						<li>Add a new book</li>
-						<li>Search for existing book by author and by title.</li>
-						<li>Add a new review</li>
-						<li>Sort books by reviews, gernes.</li>
-						
-					</ul>
-				</li>
-					
-				<li>A relational database storing reviews.</li>
-				<li>A non-relational database storing web logs (activities from users).</li>
-				<li>A non-relational database storing book metadata.</li>
-			</ul>
+
+
+		<div class="article-metadata">
+			<h4 class="article-title">Production System</h4>
+			<p class="article-content">This system has the following features.</p>
+		</div>
+		<ul>
+			<li>A front-end with at least the following functionalities:
+				<ul>
+
+					<li>Add a new book</li>
+					<li>Search for existing book by author and by title.</li>
+					<li>Add a new review</li>
+					<li>Sort books by reviews, gernes.</li>
+
+				</ul>
+			</li>
+
+			<li>A relational database storing reviews.</li>
+			<li>A non-relational database storing web logs (activities from users).</li>
+			<li>A non-relational database storing book metadata.</li>
+		</ul>
 	</div>
 </article>
-	<article class="media content-section">
+<article class="media content-section">
 	<div class="media-body">
-	<div class="article-metadata"><h4 class="article-title">Analytics System</h4>
-		<p class="article-content">This system has the following features.</p></div>
+		<div class="article-metadata">
+			<h4 class="article-title">Analytics System</h4>
+			<p class="article-content">This system has the following features.</p>
+		</div>
 		<ul>
 			<li>Loading data from the production system, and store in a distributed file system.
-				
+
 			</li>
-				
+
 			<li>Implementing two analytics tasks:
-				<ul >
-					
+				<ul>
+
 					<li>Correlation: compute the Pearson correlation between price and average review length.</li>
-					<li>TF-IDF: compute the term frequency inverse document frequency metric on the review text. Treat one review as a document.</li>
-					
-					
+					<li>TF-IDF: compute the term frequency inverse document frequency metric on the review text. Treat
+						one review as a document.</li>
+
+
 				</ul>
 			</li>
 			<li>Scaling up and down (adding or removing nodes).</li>
-			
+
 		</ul>
 	</div>
 </article>

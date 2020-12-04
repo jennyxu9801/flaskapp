@@ -1,52 +1,17 @@
-{%extends "layout.html"%}
+{%extends "search.html"%}
 
 {%block content%}
 
-<form method="POST" action="">
+<article class="media content-section">
+    <div class="media-body">
 
-    <fieldset class="form-group">
-
-        <div class="form-group">
-            <p>Order by:
-                {% if form.orderby.errors%}
-                {{form.orderby(class="form-control form-control-lg is-invalid")}}
-            <div class="invalid-feedback">
-                {%for error in form.orderby.errors%}
-                <span>
-                    {{error}}
-                </span>
-                {%endfor%}
-            </div>
-
-            {%else%}
-            {{form.orderby(class="button")}}
-
-            {%endif%}
-
-
-            {% if form.search.errors%}
-            {{form.search(class="form-control form-control-lg is-invalid")}}
-            <div class="invalid-feedback">
-                {%for error in form.search.errors%}
-                <span>
-                    {{error}}
-                </span>
-                {%endfor%}
-            </div>
-
-            {%else%}
-            {{form.search(style="position: relative;left: 30px;font-size: 70%;" ,class="btn btn-outline-info")}}
-
-            {%endif%}
-
+        <div class="article-metadata">
+            <h4 class="article-title">Categories: {{category}}</h4>
         </div>
+        
+    </div>
 
-    </fieldset>
-
-</form>
-
-
-
+</article>
 {% for book in books.items %}
 <article class="media content-section">
 
@@ -92,12 +57,32 @@
 {%for page_num in books.iter_pages(left_edge=2, right_edge=2, left_current=1, right_current=3)%}
 {%if page_num%}
 {%if books.page==page_num%}
-<a class="btn btn-info mb-4" href="{{url_for('main.book',page=page_num)}}">{{page_num}}</a>
+<a class="btn btn-info mb-4" href="{{url_for('main.search_cat',category=category,page=page_num)}}">{{page_num}}</a>
 {%else%}
-<a class="btn btn-outline-info mb-4" href="{{url_for('main.book',page=page_num)}}">{{page_num}}</a>
+<a class="btn btn-outline-info mb-4" href="{{url_for('main.search_cat',category=category,page=page_num)}}">{{page_num}}</a>
 {%endif%}
 {%else%}
 ...
 {%endif%}
 {% endfor %}
+
 {%endblock content%}
+
+{%block Sidebar%}
+
+    <div >
+        <div class="content-section">
+            <h3>Sub Categories: </h3>
+            
+            <ul class="list-group">
+                {% for category in categorykey %}
+                <li class="list-group-item list-group-item-light"><a  style="font-size:16px" href="{{url_for('main.search_cat',category=category)}}">{{ category }}</a></li>
+                
+                {%endfor%}
+        
+            </ul>
+            </p>
+        </div>
+    
+
+{%endblock Sidebar%}

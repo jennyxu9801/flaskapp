@@ -16,7 +16,6 @@ class SearchForm(FlaskForm):
 
 class OrderByForm(FlaskForm):
     orderby = SelectField('Order By',choices=[(1, 'Rating(desc)'), (2, 'Rating(asc)')])
-    gernes = SelectField('Gernes',choices=[(1, 'All'), (2, 'Title')])
     search =   SubmitField('Search')
 
 class NewReviewForm(FlaskForm):

@@ -1,9 +1,12 @@
+#%% Setting the data path
+
 import pandas as pd
 import datetime
 
 datapath = 'C:\\Users\\x5021\\Downloads\\archive\\kindle_reviews.csv'
 
-#%%
+#%% Read the csv file into pandas dataframe
+
 colnames=['id', 'asin', 'helpful', 'overall','reviewText','reviewTime','reviewerID','reviewerName','summary','unixReviewTime'] 
 
 data = pd.read_csv(datapath,names=colnames, header=None)
@@ -11,14 +14,16 @@ data = data.drop(index =0)
 
 print(data.head())
 
-#%%
+#%% Connect to the database
 
 from sqlalchemy import create_engine
 engine = create_engine('sqlite:///site.db')
 
-print(engine.table_names())
+import pymongo
+myclient = pymongo.MongoClient("mongodb://localhost:27017/")
+mydb = myclient["mongo"]
 
-#%%
+#%% Create table from base models
     
 from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Text
 from sqlalchemy.orm import relationship
@@ -33,8 +38,9 @@ class Book(Base):
     price = Column(Integer, default = 0)
     imUrl = Column(String(100))
     brand = Column(String(100))
+    genre = Column(String(100))
     reviews = relationship('Review',backref='book',lazy=True)
-
+    
     def __repr__(self):
         return f"Book('{self.title}','{self.asin}')"
 
@@ -66,7 +72,7 @@ Base.metadata.create_all(engine)
     
     
 
-#%%
+#%% Create session and process review info from kaggle
 from sqlalchemy.orm import sessionmaker
 import re
 
@@ -75,9 +81,13 @@ Session = sessionmaker(bind=engine)
 
 # create a Session
 session = Session()
+
+#%% Process review info from kaggle
+
 counter=0
 big_counter=0
 reviewer_ls =[]
+
 
 for index,review in data.iterrows():
     s = review['reviewTime']
@@ -100,9 +110,9 @@ for index,review in data.iterrows():
     
     
     counter+=1
-    if counter==10:
+    if counter==100:
         
-        print(f'commiting {big_counter}')
+        print(f'commiting {big_counter}00')
         session.commit()
         big_counter+=1
         counter=0
@@ -110,7 +120,7 @@ for index,review in data.iterrows():
 session.commit()
 print('Finish writing reviews to sqlite database')
 
-#%%
+#%% Clean the unstandard json file and save as new one
 import json
 import ast
 
@@ -128,48 +138,143 @@ for line in fr:
 fw.close()
 fr.close()
 
-#%%
+#%% Read the metadata into pandas dataframe
 
 import pandas as pd
 df = pd.read_json (r'C:\\Users\\x5021\\Downloads\\meta_kindle_store\\new_meta_Kindle_Store.json',lines=True)
-print (df.head(5))
+print (df['categories'])
 
-#%%
+
+#%%  Create session and process books info 
+
 session.rollback()
 counter=0
 big_counter=0
 book_ls =[]
+genre_ls = []
 
 for index,book in df.iterrows():
    
     bookasin=book['asin']
+    genre = book['categories']
+    
 
     newbook = Book(asin = book['asin'],description = book['description'],
                        price = book['price'],imUrl = book['imUrl'],
-                       title = book['title'],brand = book['brand'])
+                       title = book['title'],brand = book['brand'],genre = str(genre))
     
-
-    
+    #keeping a distinct book list for creating the relational db for books
     if bookasin not in book_ls:
-        
         session.add(newbook)
-        book_ls.append(bookasin)
-    
-    
+        book_ls.append(bookasin)          
     counter+=1
-    if counter==10:
+    
+    if counter==100:
         
-        print(f'commiting {big_counter}')
+        print(f'commiting {big_counter}00')
         session.commit()
         big_counter+=1
         counter=0
-
+    
+    '''if big_counter == 10:  # for testing purpose, we dont need full data to test 
+        break'''
+        
 session.commit()
 print('Finish writing metadata to sqlite database')
 
 
+#%% Processing metadata and store into mongodb
+  
+import json
+collection_books = mydb['book']
+
+data = [json.loads(line) for line in open('C:\\Users\\x5021\\Downloads\\meta_kindle_store\\new_meta_Kindle_Store.json', 'r')]
+collection_books.insert_many(data)
 
 #%%
+import re
+# This function will return a dictionary of all the categories with subcategories
+def build_dic_cat(ls,totaldic):
+    dicutil={}
+    #ls is a list of list
+    for sublst in ls:   #['Books', 'Literature & Fiction']
+        
+        i=0
+        dicfor1 ={}
+        element1=re.sub(r"\.+", "", sublst[i])  #'Books'
+        if element1 not in totaldic.keys():
+            totaldic[element1]=dicfor1 
+            
+
+        i+=1
+        
+        if len(sublst)==i:
+            continue
+        
+        dicfor2={}
+        dicutil= totaldic[element1]
+        element2=re.sub(r"\.+", "", sublst[i]) #lit and fic
+        if element2 not in dicutil.keys():
+            dicutil[element2]=dicfor2
+            
+            
+        i+=1
+        if len(sublst)==i:
+            continue
+        
+        dicfor3={}
+        dicutil=dicutil[element2]
+        element3=re.sub(r"\.+", "", sublst[i])
+        if element3 not in dicutil.keys():
+            dicutil[element3]=dicfor3
+            
+        i+=1
+        if len(sublst)==i:
+            continue
+        
+        dicfor4={}
+        dicutil=dicutil[element3]
+        element4=re.sub(r"\.+", "", sublst[i])
+        if element4 not in dicutil.keys():
+            dicutil[element4]=dicfor4
+            
+        i+=1
+        if len(sublst)==i:
+            continue
+        
+        dicfor5={}
+        dicutil=dicutil[element4]
+        element5=re.sub(r"\.+", "", sublst[i])
+        if element5 not in dicutil.keys():
+            dicutil[element5]=dicfor5
+            
+        i+=1
+        if len(sublst)==i:
+            continue
+        
+        
+    
+    return totaldic
+    
+
+
+
+
+#%%
+
+cat_dic={}
+for book in collection_books.find():
+    genre = book["categories"]
+    cat_dic = build_dic_cat(genre,cat_dic)
+
+with open('categories.json', 'w') as fp:
+    json.dump(cat_dic, fp)
+    
+# back up the categories in mongodb
+collection_categories = mydb['categories']
+collection_categories.insert_one(cat_dic)
+
+#%% Drop table in case that need to reset the table
 
 Book.__table__.drop(engine)
 

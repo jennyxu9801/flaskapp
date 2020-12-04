@@ -1,65 +1,60 @@
 {%extends "layout.html"%}
 
 {%block content%}
-<div class="content-section"> 
+<div class="content-section">
     <form method="POST" action="">
         {{form.hidden_tag()}}
         <fieldset class="form-group">
             <legend class="border-bottom mb-4">Search</legend>
-            
-            
+            {% if form.category.errors%}
+            {{form.category(class="form-control form-control-lg is-invalid")}}
+            <div class="invalid-feedback">
+                {%for error in form.category.errors%}
+                <span>
+                    {{error}}
+                </span>
+                {%endfor%}
+            </div>
 
-                {% if form.category.errors%}
-                        {{form.category(class="form-control form-control-lg is-invalid")}}
-                        <div class="invalid-feedback">
-                            {%for error in form.category.errors%}
-                            <span>
-                                {{error}}
-                            </span>
-                            {%endfor%}
-                        </div>
+            {%else%}
+            {{form.category(class="button")}}
 
-                    {%else%}
-                        {{form.category(class="button")}}
+            {%endif%}
+            {% if form.content.errors%}
+            {{form.content(class="form-control form-control-lg is-invalid")}}
+            <div class="invalid-feedback">
+                {%for error in form.content.errors%}
+                <span>
+                    {{error}}
+                </span>
+                {%endfor%}
+            </div>
 
-                    {%endif%}
-                
-            
+            {%else%}
+            {{form.content(class="text")}}
 
-            
-               
-                {% if form.content.errors%}
-                    {{form.content(class="form-control form-control-lg is-invalid")}}
-                    <div class="invalid-feedback">
-                        {%for error in form.content.errors%}
-                        <span>
-                            {{error}}
-                        </span>
-                        {%endfor%}
-                    </div>
-    
-                {%else%}
-                    {{form.content(class="text")}}
-    
-                {%endif%}
-            
-            
-        
+            {%endif%}
             {{form.search(class="btn btn-outline-info")}}
-           
-        
     </form>
 </div>
+<article class="media content-section">
+    <div class="media-body">
 
+        <div class="article-metadata">
+            <h4 class="article-title">Categories</h4>
+        </div>
+        <ul>
+            {% for category in categorykey %}
+            <li><a  style="font-size:16px" href="{{url_for('main.search_cat',category=category)}}">{{ category }}</a></li>
+            
+            {%endfor%}
+    
+        </ul>
+    </div>
+    
+    
+
+</article>
 {%endblock content%}
-
-
-
-
-
-
-
-
-
 
 

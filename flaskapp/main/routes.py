@@ -5,19 +5,14 @@ from flask import (render_template, url_for, flash,
                    redirect)
 from flaskapp import db
 from sqlalchemy.sql import func,desc,asc
-
+import json
 
 main = Blueprint('main',__name__)
+f = open('C:\\Users\\x5021\\OneDrive\\桌面\\flask_app\\flaskapp\\categories.json') 
+categorydata = json.load(f)
+categorykey=categorydata.keys()
 
 
-@main.route("/")
-@main.route("/home")
-def home():
-    page = request.args.get('page', 1, type=int)
-    posts = Post.query.order_by(
-        Post.date_posted.desc()).paginate(page=page, per_page=2)
-
-    return render_template('home.html', posts=posts)
 
 
 @main.route("/about")
@@ -31,15 +26,32 @@ def search():
         #print("entered search",flush=True)
         if form.category.data =='1':
             return redirect(url_for('main.search_result',search=form.content.data))
-        
-    
+    #print(categorydata,flush=True)
     return render_template('search.html', title='Search',
-                           form=form)
+                           form=form,categorykey =categorykey)
+
+@main.route("/search/category/<string:category>", methods=['GET', 'POST'])
+def search_cat(category):
+    form = SearchForm()
+    if form.validate_on_submit():
+        if form.category.data =='1':
+            return redirect(url_for('main.search_result',search=form.content.data))
+
+    page = request.args.get('page', 1, type=int)
+    books= Book.query.filter(Book.genre.contains(category)).paginate(page=page, per_page=5)
+    try:
+        categorykey= gen_dict_extract(categorydata,category).keys()
+    except AttributeError:
+        categorykey={}
+    
+    
+    return render_template('search_cat.html', title='Search',
+                           form=form,books=books,categorykey=categorykey)
 
 @main.route("/search/<string:search>/result")
 def search_result(search):
     page = request.args.get('page', 1, type=int)
-    books = Book.query.filter(Book.title.contains(search)).paginate(page=page, per_page=5)
+    books= Book.query.filter(Book.title.contains(search)).paginate(page=page, per_page=5)
     return render_template('search_result.html',books=books,search=search)
 
 
@@ -51,6 +63,7 @@ def review():
 
     return render_template('review.html', reviews=reviews)
 
+@main.route("/")
 @main.route("/books",methods=['GET', 'POST'])
 def book():
     form = OrderByForm()
@@ -65,7 +78,7 @@ def book():
     page = request.args.get('page', 1, type=int)
     books = Book.query.order_by(
                 Book.title.desc()).paginate(page=page, per_page=5)
-    print("before if",flush=True)
+    
     return render_template('books.html', form=form, books=books )
 
 
@@ -90,7 +103,15 @@ def order_by_rating_asc():
  
     
 
-
+def gen_dict_extract(var, key):
+    if type(var)!={}:
+        for k, v in var.items():
+            if k == key:
+                return v
+            if isinstance(v, dict):
+                ans= gen_dict_extract(v, key)
+                if ans!={} and ans!=None:
+                    return ans
 
 
 
